@@ -390,11 +390,18 @@ const ProjectDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
+ const [rotationY, setRotationY] = useState(0);
+  const isDragging = React.useRef(false);
+  const lastX = React.useRef(0);
 
   useEffect(() => {
     fetchProject();
-    AOS.init({ duration: 1000 });
+   
   }, [id]);
+
+  useEffect(() => { 
+    AOS.init({ duration: 1000 , once: true });
+  }, []); 
 
   const fetchProject = async () => {
     try {
@@ -454,6 +461,30 @@ const ProjectDetails = () => {
     }
   };
 
+useEffect(() => {
+  if (showGalleryModal) {
+    setRotationY({ x: 0, y: 0 });
+  }
+}, [showGalleryModal]);
+
+const handleMouseDown = (e) => {
+  isDragging.current = true;
+  lastX.current = e.clientX;
+};
+
+const handleMouseMove = (e) => {
+  if (!isDragging.current) return;
+
+  const delta = e.clientX - lastX.current;
+  lastX.current = e.clientX;
+
+  setRotationY((prev) => prev + delta);
+};
+
+const handleMouseUp = () => {
+  isDragging.current = false;
+};
+
   const getAmenityIcon = (amenity) => {
     if (iconMap[amenity]) return iconMap[amenity];
     const amenityLower = amenity.toLowerCase();
@@ -466,12 +497,12 @@ const ProjectDetails = () => {
   const openGalleryModal = (index) => {
     setCurrentImageIndex(index);
     setShowGalleryModal(true);
-    document.body.style.overflow = "hidden";
+  //  document.body.style.overflow = "hidden";
   };
 
   const closeGalleryModal = () => {
     setShowGalleryModal(false);
-    document.body.style.overflow = "auto";
+    //document.body.style.overflow = "auto";
   };
 
   const goToPreviousImage = () => {
@@ -482,16 +513,28 @@ const ProjectDetails = () => {
     setCurrentImageIndex(prev => prev === project.images.length - 1 ? 0 : prev + 1);
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!showGalleryModal) return;
-      if (e.key === "Escape") closeGalleryModal();
-      else if (e.key === "ArrowLeft") goToPreviousImage();
-      else if (e.key === "ArrowRight") goToNextImage();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showGalleryModal]);
+useEffect(() => {
+  if (!showGalleryModal) return;
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      setShowGalleryModal(false);
+    }
+    if (e.key === "ArrowLeft") {
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? project.images.length - 1 : prev - 1
+      );
+    }
+    if (e.key === "ArrowRight") {
+      setCurrentImageIndex((prev) =>
+        prev === project.images.length - 1 ? 0 : prev + 1
+      );
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, [showGalleryModal, project]);
 
   if (loading) {
     return (
@@ -710,44 +753,59 @@ const longitude = project.longitude;
       </div>
 
       {/* Fullscreen Modal */}
-      {showGalleryModal && project.images && (
-        <div className="fullscreen-gallery-modal">
-          <div className="gallery-modal-header">
-            <button className="gallery-close-btn" onClick={closeGalleryModal}><FaTimes /></button>
-            <span>{currentImageIndex + 1} / {project.images.length}</span>
-          </div>
-          <div className="gallery-modal-main">
-            <button className="nav-arrow left-arrow" onClick={goToPreviousImage}><FaChevronLeft /></button>
-            <img 
-              src={project.images[currentImageIndex]} 
-              alt={`${project.projectName} - Image ${currentImageIndex + 1}`} 
-              className="main-image" 
-              onError={(e) => {
-                e.target.src = "https://via.placeholder.com/1200x800/cccccc/969696?text=Image+Not+Found";
-              }}
-            />
-            <button className="nav-arrow right-arrow" onClick={goToNextImage}><FaChevronRight /></button>
-          </div>
-          <div className="thumbnail-strip">
-            {project.images.map((img, idx) => (
-              <div 
-                key={idx} 
-                className={`thumbnail-container ${idx === currentImageIndex ? 'active' : ''}`} 
-                onClick={() => setCurrentImageIndex(idx)}
-              >
-                <img 
-                  src={img} 
-                  alt={`Thumbnail ${idx + 1}`} 
-                  className="thumbnail-image" 
-                  onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/100x70/cccccc/969696?text=Thumbnail";
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+     {showGalleryModal && (
+  <div className="gallery-overlay">
+    <div className="gallery-container">
+      <button
+        className="close-btn"
+        onClick={() => setShowGalleryModal(false)}
+      >
+        <FaTimes />
+      </button>
+
+      <button
+        className="arrow left"
+        onClick={() =>
+          setCurrentImageIndex((prev) =>
+            prev === 0 ? project.images.length - 1 : prev - 1
+          )
+        }
+      >
+        <FaChevronLeft />
+      </button>
+
+     <div
+  style={{ perspective: "1200px" }}
+  onMouseMove={handleMouseMove}
+  onMouseUp={handleMouseUp}
+  onMouseLeave={handleMouseUp}
+>
+  <img
+    src={project.images[currentImageIndex]}
+    alt="Gallery"
+    className="gallery-image"
+    onMouseDown={handleMouseDown}
+    style={{
+      transform: `rotateY(${rotationY}deg)`,
+      transition: isDragging.current ? "none" : "transform 0.1s ease",
+      cursor: "grab",
+    }}
+  />
+</div>
+
+      <button
+        className="arrow right"
+        onClick={() =>
+          setCurrentImageIndex((prev) =>
+            prev === project.images.length - 1 ? 0 : prev + 1
+          )
+        }
+      >
+        <FaChevronRight />
+      </button>
+    </div>
+  </div>
+)}
     </div>
   );
 };
