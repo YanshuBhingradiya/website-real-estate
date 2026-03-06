@@ -230,21 +230,25 @@
 /* Floor Plans */
 .floorplan-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
+  margin-left: 100px;
+  grid-template-columns: repeat(auto-fill, minmax(0px, 1fr));
+  gap:200px;
+  justify-items: center;
 }
 
 .floorplan-card {
   position: relative;
+  width: 200px;
+  height: 200px;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .floorplan-card img {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.3s;
 }
@@ -253,11 +257,12 @@
   transform: scale(1.05);
 }
 
+/* Overlay Icon */
 .floorplan-overlay {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255,255,255,0.9);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -276,30 +281,29 @@
   color: #3498db;
 }
 
+/* Info Section */
 .floorplan-info {
-  padding: 1rem;
-  background-color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  background: rgba(255,255,255,0.9);
+  text-align: center;
 }
 
 .floorplan-info h4 {
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   color: #333;
 }
 
-.floorplan-info p {
-  margin: 0;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-/* Floor Plan Modal */
+/* Modal */
 .floorplan-modal {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.9);
+  width: 100%;
+  height: 100%;
+  background-color: white;   /* changed from black to white */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -310,18 +314,20 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: none;
+  background: #f1f1f1;
   border: none;
-  color: white;
+  color: #333;
   font-size: 2rem;
   cursor: pointer;
-  z-index: 1001;
+  border-radius: 50%;
+  padding: 5px 12px;
 }
 
 .modal-image {
-  max-width: 90%;
-  max-height: 90%;
+  width: 500px;
+  height: 500px;
   object-fit: contain;
+  background: white;
 }
 
 /* Map Section */
