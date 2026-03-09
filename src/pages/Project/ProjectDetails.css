@@ -68,11 +68,12 @@
 /* Hero Section */
 .project-hero {
   position: relative;
-  height: 400px;
+  height: 500px;
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 3rem;
   cursor: pointer;
+  margin-top: 65px;
 }
 
 .hero-image {
@@ -303,7 +304,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: white;   /* changed from black to white */
+  background-color: white;   
   display: flex;
   align-items: center;
   justify-content: center;
@@ -441,7 +442,7 @@
 .gallery-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(255, 255, 255, 0.95);  /* WHITE BACKGROUND */
+  background: rgba(255, 255, 255, 0.95);  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -450,7 +451,7 @@
 
 .gallery-container {
   position: relative;
-  width: 90%;
+  width: 100%;
   max-width: 1000px;
   display: flex;
   align-items: center;
@@ -508,10 +509,84 @@
 .gallery-image {
   width: 500px;
   height: 500px;
-  object-fit: cover;   /* keeps image filled without distortion */
+  object-fit: cover;   
   border-radius: 10px;
    display: flex;
    background: white;
   justify-content: center;
   align-items: center;
+}
+
+.property-gallery {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  text-align: center;
+}
+
+.gallery-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.gallery-main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-gallery-image {
+  width: 100%;
+  height: 450px;
+  object-fit: contain;   
+  background: #000;     
+  border-radius: 10px;
+}
+
+.gallery-arrow {
+  position: absolute;
+  background: white;
+  border: none;
+  font-size: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.gallery-arrow.left {
+  left: -20px;
+}
+
+.gallery-arrow.right {
+  right: -20px;
+}
+
+.gallery-thumbnails {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 120px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.thumbnail:hover {
+  opacity: 1;
+}
+
+.active-thumb {
+  opacity: 1;
+  border: 2px solid #c79c42;
 }

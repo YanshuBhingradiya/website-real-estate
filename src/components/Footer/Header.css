@@ -105,7 +105,7 @@
   color: #fff;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #00c6ff;
+  border-bottom: 1.9px solid #00c6ff;
   display: inline-block;
   font-weight: 600;
   position: relative;
@@ -186,7 +186,7 @@
 .newsletter-input {
   flex: 1;
   padding: 0.9rem 1.2rem;
-  border: 1px solid #4a5568;
+  border: 2px solid #4a5568;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
@@ -205,7 +205,7 @@
 }
 
 .subscribe-btn {
-  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  background: linear-gradient(90deg, #394a4e, #0072ff);
   color: white;
   border: none;
   padding: 0.9rem 1.8rem;
@@ -214,6 +214,7 @@
   cursor: pointer;
   transition: all 0.3s;
   white-space: nowrap;
+  marhin-top: 0.5rem;
 }
 
 .subscribe-btn:hover {

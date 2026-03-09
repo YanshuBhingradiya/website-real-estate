@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "./ProjectDetails.css";
+import { Viewer } from "@photo-sphere-viewer/core";
+import "@photo-sphere-viewer/core/index.css";
+
 
 /* Icons Import */
 import {
@@ -278,6 +281,7 @@ const iconMap = {
   "Yoga Meditation Centre": <MdOutlineSpa />,
   "Meditation Area": <GiMeditation />,
   "Spa": <MdOutlineSpa />,
+  "Senior Citizen Area":  <MdOutlineDirectionsWalk />,
 
   // Indoor Games
   "Indoor Games": <MdSportsSoccer />,
@@ -306,7 +310,7 @@ const iconMap = {
   "Flower Garden": <GiFlowerEmblem />,
 
   // Tracks & Paths
-  "Jogging Track": <GiFootprint />,
+  "Jogging Track": <GiPathDistance />,
   "Jogging And Cycle Track": <GiPathDistance />,
   "Walking Track": <GiFootprint />,
   "Cycle Track": <GiPathDistance />,
@@ -393,6 +397,61 @@ const ProjectDetails = () => {
  const [rotationY, setRotationY] = useState(0);
   const isDragging = React.useRef(false);
   const lastX = React.useRef(0);
+  const viewerRef = useRef(null);
+const viewerContainerRef = useRef(null); 
+
+useEffect(() => {
+  if (!showGalleryModal || !viewerContainerRef.current || !project?.images) return;
+
+  if (viewerRef.current) {
+    viewerRef.current.destroy();
+    viewerRef.current = null;
+  }
+
+  const viewer = new Viewer({
+    container: viewerContainerRef.current,
+    panorama: project.images[currentImageIndex],
+
+    navbar: ["zoom","fullscreen"],
+
+    defaultFov: 120,
+    minFov: 50,
+    maxFov: 130
+  });
+
+  viewerRef.current = viewer;
+
+  const handleMouseMove = (e) => {
+
+    const rect = viewerContainerRef.current.getBoundingClientRect();
+
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+
+    const yaw = (x - 0.5) * Math.PI * 2;
+    const pitch = (0.5 - y) * Math.PI / 4;
+
+    viewer.rotate({
+      yaw: yaw,
+      pitch: pitch
+    });
+
+  };
+
+  viewerContainerRef.current.addEventListener("mousemove", handleMouseMove);
+
+  return () => {
+
+    viewerContainerRef.current?.removeEventListener("mousemove", handleMouseMove);
+
+    if (viewerRef.current) {
+      viewerRef.current.destroy();
+      viewerRef.current = null;
+    }
+
+  };
+
+}, [showGalleryModal, currentImageIndex, project]);
 
   useEffect(() => {
     fetchProject();
@@ -567,9 +626,9 @@ const longitude = project.longitude;
   return (
     <div className="project-details-container">
       {/* Back Button */}
-      <button className="back-nav-btn" onClick={() => navigate("/projects")}>
+      {/* <button className="back-nav-btn" onClick={() => navigate("/projects")}>
         <FaArrowLeft /> Back to Projects
-      </button>
+      </button> */}
 
       <div className="project-content-wrapper">
         {/* Hero Image */}
@@ -624,25 +683,6 @@ const longitude = project.longitude;
           </div>
         </div> */}
 
-        {/* Gallery */}
-        {project.images && project.images.length > 1 && (
-          <div className="gallery-section">
-            <h2>Gallery</h2>
-            <div className="gallery-grid">
-              {project.images.slice(1, Math.min(5, project.images.length)).map((img, index) => (
-                <div className="gallery-item" key={index} onClick={() => openGalleryModal(index + 1)}>
-                  <img 
-                    src={img} 
-                    alt={`${project.projectName} - Image ${index + 2}`} 
-                    onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/200x150/cccccc/969696?text=Image";
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Amenities */}
         {project.amenities && project.amenities.length > 0 && (
@@ -658,6 +698,65 @@ const longitude = project.longitude;
             </div>
           </div>
         )}
+
+        
+        {/* Gallery */}
+     <div className="property-gallery">
+
+  <h2 className="gallery-title">Project Gallery</h2>
+
+  <div className="gallery-main">
+
+    <button
+      className="gallery-arrow left"
+      onClick={() =>
+        setCurrentImageIndex(
+          currentImageIndex === 0
+            ? project.images.length - 1
+            : currentImageIndex - 1
+        )
+      }
+    >
+      <FaChevronLeft />
+    </button>
+
+    <img
+      src={project.images[currentImageIndex]}
+      alt="Property"
+      className="main-gallery-image"
+    />
+
+    <button
+      className="gallery-arrow right"
+      onClick={() =>
+        setCurrentImageIndex(
+          currentImageIndex === project.images.length - 1
+            ? 0
+            : currentImageIndex + 1
+        )
+      }
+    >
+      <FaChevronRight />
+    </button>
+
+  </div>
+
+  {/* Thumbnail Images */}
+  <div className="gallery-thumbnails">
+    {project.images.map((img, index) => (
+      <img
+        key={index}
+        src={img}
+        alt="thumbnail"
+        className={`thumbnail ${
+          currentImageIndex === index ? "active-thumb" : ""
+        }`}
+        onClick={() => setCurrentImageIndex(index)}
+      />
+    ))}
+  </div>
+
+</div>
 
         {/* FLOOR PLANS */}
         {project.floorPlans?.length > 0 && (
@@ -759,6 +858,7 @@ const longitude = project.longitude;
      {showGalleryModal && (
   <div className="gallery-overlay">
     <div className="gallery-container">
+
       <button
         className="close-btn"
         onClick={() => setShowGalleryModal(false)}
@@ -777,27 +877,18 @@ const longitude = project.longitude;
         <FaChevronLeft />
       </button>
 
-     <div
-  style={{ perspective: "1200px" }}
-  onMouseMove={handleMouseMove}
-  onMouseUp={handleMouseUp}
-  onMouseLeave={handleMouseUp}
->
-  <img
-    src={project.images[currentImageIndex]}
-    alt="Gallery"
-    className="gallery-image"
-    onMouseDown={handleMouseDown}
-    style={{
-      transform: `rotateY(${rotationY}deg)`,
-      transition: isDragging.current ? "none" : "transform 0.1s ease",
-      cursor: "grab",
-    }}
-    onError={(e)=>{
-  e.target.src="https://via.placeholder.com/800x600?text=Image";
-}}
-  />
-</div>
+      {/* 360 Viewer Container */}
+    <div
+  ref={viewerContainerRef}
+  style={{
+    width: "100%",
+    height: "500px",
+    maxWidth: "900px",
+    borderRadius: "10px",
+    overflow: "hidden",
+    background: "#000"
+  }}
+></div>
 
       <button
         className="arrow right"
@@ -809,6 +900,7 @@ const longitude = project.longitude;
       >
         <FaChevronRight />
       </button>
+
     </div>
   </div>
 )}

@@ -94,7 +94,7 @@ const Footer = () => {
             Subscribe to our newsletter for the latest property updates and offers.
           </p>
           
-          {/* <form onSubmit={handleSubscribe} className="newsletter-form">
+          <form onSubmit={handleSubscribe} className="newsletter-form">
             <div className="input-group">
               <input
                 type="email"
@@ -104,17 +104,17 @@ const Footer = () => {
                 required
                 className="newsletter-input"
               />
-              <button type="submit" className="subscribe-btn">Subscribe</button>
             </div>
+            <button type="submit" className="subscribe-btn">Subscribe</button>
             {subscribed && (
               <div className="success-message">
                Successfully subscribed!
               </div>
             )}
-          </form> */}
+          </form>
 
           {/* Social Media */}
-          <div className="social-section">
+          {/* <div className="social-section">
             <h4 className="social-title">Connect With Us</h4>
             <div className="footer-social">
               <Link to="#" className="social-icon facebook"><FaFacebookF /></Link>
@@ -123,7 +123,7 @@ const Footer = () => {
               <Link to="#" className="social-icon linkedin"><FaLinkedinIn /></Link>
               <Link to="#" className="social-icon youtube"><FaYoutube /></Link>
             </div>
-          </div>
+          </div> */}
 
           {/* Copyright Section */}
 <div className="footer-copyright">
