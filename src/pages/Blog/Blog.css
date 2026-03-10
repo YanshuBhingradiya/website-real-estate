@@ -91,7 +91,10 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   border: 1px solid #f1f5f9;
-  height: 100%;
+  .blog-card {
+  display: flex;
+  flex-direction: column;
+}
 }
 
 .blog-card:hover {
@@ -184,11 +187,10 @@
 
 /* ==================== BLOG CONTENT ==================== */
 .blog-content {
-  padding: 2.5rem;
-  position: relative;
+  padding: 1.8rem;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 250px);
+  flex: 1;
 }
 
 /* Tags */
@@ -217,9 +219,9 @@
 
 /* Title */
 .blog-title {
-  font-size: 1.6rem;
   color: #1a365d;
-  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  margin-bottom: 0.6rem;
   line-height: 1.3;
   font-weight: 700;
   position: relative;
@@ -241,7 +243,7 @@
 .blog-excerpt {
   color: #64748b;
   line-height: 1.7;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 1rem;
   flex-grow: 1;
 }
@@ -281,8 +283,8 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
   border-top: 1px solid #f1f5f9;
 }
 
