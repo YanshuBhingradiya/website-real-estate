@@ -666,41 +666,35 @@ const longitude = project.longitude;
 
     {/* RIGHT SIDE CONTENT */}
     <div className="hero-right">
-      <h1>{project.projectName}</h1>
+  <h1>{project.projectName}</h1>
 
-      <p className="hero-location">
-        <FaMapMarkerAlt /> {project.location}
-      </p>
+  {/* ✅ Project Type Added */}
+  <p className="hero-type">
+    🏠 {project.projectType}
+  </p>
 
-      {project.description && (
-        <p className="hero-description">
-          {project.description}
-        </p>
-      )}
+  <p className="hero-location">
+    <FaMapMarkerAlt /> {project.location}
+  </p>
 
-      <button
-        className="enquiry-btn"
-        onClick={() => navigate("/contact")}
-      >
-       ☎ Enquire Now
-      </button>
-    </div>
+  {project.description && (
+    <p className="hero-description">
+      {project.description}
+    </p>
+  )}
+
+  <button
+    className="enquiry-btn"
+    onClick={() => navigate("/contact")}
+  >
+    ☎ Enquire Now
+  </button>
+</div>
 
   </div>
 )}
-
-        {/* Project Details */}
-        <div className="details-section">
-          <h2>Project Details</h2>
-          <div className="details-grid">
-            <div className="detail-card"><FaBuilding /> <p>{project.projectType}</p></div>
-            <div className="detail-card"><FaMapMarkerAlt /> <p>{project.location}</p></div>
-            {/* <div className="detail-card"><FaHome /> <p>{project.totalHouse} Units</p></div> */}
-            
-          </div>
-        </div>
-
-        {/* Additional Project Stats */}
+       
+      {/* Additional Project Stats */}
         {/* <div className="stats-section">
           <h3>Project Specifications</h3>
           <div className="stats-grid">

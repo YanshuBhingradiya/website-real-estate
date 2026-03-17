@@ -642,23 +642,22 @@
   text-align: justify;
 }
 
-/* 🔥 PREMIUM SPLIT HERO SECTION */
+/* 🔥 LUXURY SPLIT HERO SECTION */
 .hero-split {
   display: flex;
-  min-height: 460px;
-  margin-top: 70px;
-  border-radius: 16px;
+  min-height: 500px;
+  margin-top: 80px;
+  border-radius: 10px;
   overflow: hidden;
   margin-bottom: 3rem;
   background: #ffffff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
 }
 
 /* LEFT IMAGE */
 .hero-left {
-  flex: 1.2;
+  flex: 1.3;
   position: relative;
-  cursor: pointer;
   overflow: hidden;
 }
 
@@ -666,50 +665,62 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: transform 0.8s ease;
 }
 
-/* Smooth zoom effect */
+/* Smooth luxury zoom */
 .hero-left:hover img {
-  transform: scale(1.08);
+  transform: scale(1.12);
 }
 
-/* Dark gradient overlay (premium look) */
+/* Premium dark overlay */
 .hero-left::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.1)
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0.2)
   );
 }
 
 /* RIGHT CONTENT */
 .hero-right {
   flex: 1;
-  padding: 2.5rem;
+  padding: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: linear-gradient(135deg, #ffffff, #f3f8ff);
+
+  /* Luxury soft gradient */
+  background: linear-gradient(135deg, #ffffff, #f8f9fb);
 }
 
-/* TITLE */
+/* TITLE (Luxury Typography) */
 .hero-right h1 {
-  font-size: 2.4rem;
+  font-size: 2.6rem;
   font-weight: 700;
-  margin-bottom: 12px;
-  color: #222;
+  margin-bottom: 14px;
+  color: #1a1a1a;
+  letter-spacing: 1px;
+  font-family: "Playfair Display", serif; /* premium font */
+}
+
+.hero-type {
+  display: inline-block;
+  color: #066e7b;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 10px;
   letter-spacing: 0.5px;
 }
 
 /* LOCATION */
 .hero-location {
   font-size: 1rem;
-  color: #666;
-  margin-bottom: 18px;
+  color: #066e7b;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -717,50 +728,75 @@
 
 /* DESCRIPTION */
 .hero-description {
-  font-size: 1.08rem;
+  font-size: 1.1rem;
   color: #444;
-  line-height: 1.8;
-  margin-bottom: 25px;
+  line-height: 1.9;
+  margin-bottom: 30px;
   text-align: justify;
 }
 
-/* BUTTON */
+/* GOLD DIVIDER (Luxury touch) */
+.hero-right::before {
+  content: "";
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #0e4165, #0d7bae);
+  margin-bottom: 20px;
+  display: block;
+}
+
+/* LUXURY BUTTON */
 .enquiry-btn {
-  padding: 12px 22px;
-  background: linear-gradient(135deg, #3498db, #5dade2);
-  color: white;
+  padding: 14px 26px;
+  background: linear-gradient(to right, #0e4165, #0d7bae);
+  color: #e7e0e0;
   border: none;
-  border-radius: 8px;
+  border-radius: 30px;
   cursor: pointer;
   width: fit-content;
   font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  transition: all 0.4s ease;
 }
 
-/* Button hover effect */
+/* Button hover */
 .enquiry-btn:hover {
-  background: linear-gradient(135deg, #2c80b4, #3498db);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
+   background: linear-gradient(to right, #0e4165, #0d7bae);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(2, 116, 131, 0.4);
+}
+
+/* ✨ subtle animation */
+.hero-right {
+  animation: fadeSlide 1s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* 📱 MOBILE RESPONSIVE */
 @media (max-width: 768px) {
   .hero-split {
     flex-direction: column;
-    min-height: auto;
   }
 
   .hero-left {
-    height: 250px;
+    height: 260px;
   }
 
   .hero-right {
-    padding: 1.5rem;
+    padding: 1.8rem;
   }
 
   .hero-right h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 }
