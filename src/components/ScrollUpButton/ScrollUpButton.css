@@ -28,9 +28,9 @@
 }
 
 .scroll-up-btn::before {
-  content: '🏠';
+  content: '▲';
   position: absolute;
-  font-size: 18px;
+  font-size: 20px;
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.3s ease;

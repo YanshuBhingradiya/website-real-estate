@@ -28,7 +28,7 @@ const ScrollUpButton = () => {
     show && (
       <button className="scroll-up-btn property-theme" onClick={scrollToTop} aria-label="Scroll to top">
         <span>↑</span>
-        <div className="tooltip">Back to Top 🏠</div>
+        <div className="tooltip">Back to Top ↑ </div>
       </button>
     )
   );

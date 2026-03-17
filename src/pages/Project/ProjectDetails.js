@@ -659,6 +659,7 @@ const longitude = project.longitude;
               <h1 className="project-title">{project.projectName}</h1>
             </div>
           </div>
+          
         )}
 
         {/* Project Details */}
@@ -668,6 +669,7 @@ const longitude = project.longitude;
             <div className="detail-card"><FaBuilding /> <p>{project.projectType}</p></div>
             <div className="detail-card"><FaMapMarkerAlt /> <p>{project.location}</p></div>
             {/* <div className="detail-card"><FaHome /> <p>{project.totalHouse} Units</p></div> */}
+            
           </div>
         </div>
 
