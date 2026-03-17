@@ -645,22 +645,49 @@ const longitude = project.longitude;
 
       <div className="project-content-wrapper">
         {/* Hero Image */}
-        {project.images && project.images[0] && (
-          <div className="project-hero" onClick={() => openGalleryModal(0)}>
-            <img 
-              src={project.images[0]} 
-              alt={project.projectName} 
-              className="hero-image" 
-              onError={(e) => {
-                e.target.src = "https://via.placeholder.com/800x400/cccccc/969696?text=Project+Image";
-              }}
-            />
-            <div className="hero-overlay">
-              <h1 className="project-title">{project.projectName}</h1>
-            </div>
-          </div>
-          
-        )}
+        {/* 🔥 NEW SPLIT HERO SECTION */}
+{project.images && project.images[0] && (
+  <div className="hero-split">
+
+    {/* LEFT SIDE IMAGE */}
+    <div
+      className="hero-left"
+      onClick={() => openGalleryModal(0)}
+    >
+      <img
+        src={project.images[0]}
+        alt={project.projectName}
+        onError={(e) => {
+          e.target.src =
+            "https://via.placeholder.com/800x400/cccccc/969696?text=Project+Image";
+        }}
+      />
+    </div>
+
+    {/* RIGHT SIDE CONTENT */}
+    <div className="hero-right">
+      <h1>{project.projectName}</h1>
+
+      <p className="hero-location">
+        <FaMapMarkerAlt /> {project.location}
+      </p>
+
+      {project.description && (
+        <p className="hero-description">
+          {project.description}
+        </p>
+      )}
+
+      <button
+        className="enquiry-btn"
+        onClick={() => navigate("/contact")}
+      >
+       ☎ Enquire Now
+      </button>
+    </div>
+
+  </div>
+)}
 
         {/* Project Details */}
         <div className="details-section">
