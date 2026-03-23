@@ -6,6 +6,8 @@ import "aos/dist/aos.css";
 import "./ProjectDetails.css";
 import { Viewer } from "@photo-sphere-viewer/core";
 import "@photo-sphere-viewer/core/index.css";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 
 /* Icons Import */
@@ -394,12 +396,13 @@ const ProjectDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
- const [rotationY, setRotationY] = useState(0);
+  const [rotationY, setRotationY] = useState(0);
   const isDragging = React.useRef(false);
   const lastX = React.useRef(0);
   const viewerRef = useRef(null);
-const viewerContainerRef = useRef(null); 
-const [isHovered, setIsHovered] = useState(false);
+  const viewerContainerRef = useRef(null); 
+  const [isHovered, setIsHovered] = useState(false);
+  const [showBrochure, setShowBrochure] = useState(false);
 
 useEffect(() => {
   if (!showGalleryModal || !viewerContainerRef.current || !project?.images) return;
@@ -464,7 +467,7 @@ useEffect(() => {
   }, 3000);
 
   return () => clearInterval(interval);
-}, [project, isHovered]);
+  }, [project, isHovered]);
 
   useEffect(() => {
     fetchProject();
@@ -632,8 +635,79 @@ useEffect(() => {
     );
   }
 
+
+const downloadBrochure = async () => {
+  setShowBrochure(true);
+
+  setTimeout(async () => {
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pageWidth = 210;
+    const pageHeight = 295;
+
+    let y = 10;
+
+    const addBlock = async (el) => {
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true
+      });
+
+      const img = canvas.toDataURL("image/png");
+
+      const imgWidth = pageWidth - 20;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // ✅ CHECK SPACE
+      if (y + imgHeight > pageHeight) {
+        pdf.addPage();
+        y = 10;
+      }
+
+      pdf.addImage(img, "PNG", 10, y, imgWidth, imgHeight);
+      y += imgHeight + 8;
+    };
+
+    // 👉 ADD SECTIONS
+    await addBlock(document.getElementById("b-title"));
+    await addBlock(document.getElementById("b-description"));
+    await addBlock(document.getElementById("b-info"));
+    await addBlock(document.getElementById("b-amenities"));
+    await addBlock(document.getElementById("b-gallery"));
+
+    // 👉 ADD EACH FLOOR PLAN SEPARATELY (IMPORTANT)
+    const floorRows = document.querySelectorAll("#b-floorplans .floor-row");
+
+    for (let row of floorRows) {
+      await addBlock(row);
+    }
+
+    pdf.save(`${project.projectName}_Brochure.pdf`);
+    setShowBrochure(false);
+  }, 500);
+};
+
+const getBase64FromUrl = async (url) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+};
+
 const latitude = project.latitude;
 const longitude = project.longitude;
+
+const cellStyle = {
+    border: "1px solid #ccc",
+    padding: "8px",
+    fontSize: "12px",
+    textAlign: "center"
+ };
 
 
   return (
@@ -694,32 +768,7 @@ const longitude = project.longitude;
   </div>
 )}
        
-      {/* Additional Project Stats */}
-        {/* <div className="stats-section">
-          <h3>Project Specifications</h3>
-          <div className="stats-grid">
-            {project.projectType === "flat" && (
-              <>
-                <div className="stat-item">
-                  <strong>Total Wings:</strong> {project.totalWings || 0}
-                </div>
-                <div className="stat-item">
-                  <strong>Total Floors:</strong> {project.totalFloors || 0}
-                </div>
-                <div className="stat-item">
-                  <strong>Units per Floor:</strong> {project.perFloorHouse || 0}
-                </div>
-              </>
-            )}
-            {(project.projectType === "banglow" || project.projectType === "row-house") && (
-              <div className="stat-item">
-                <strong>Total Plots:</strong> {project.totalPlots || 0}
-              </div>
-            )}
-          </div>
-        </div> */}
-
-
+      
         {/* Amenities */}
         {project.amenities && project.amenities.length > 0 && (
           <div className="amenities-section">
@@ -889,6 +938,9 @@ const longitude = project.longitude;
               <button className="cta-btn primary"onClick={() => navigate("/contact")}>
                       Book Now 
               </button>
+              <button className="brochure-btn" onClick={downloadBrochure}>
+                📄 Download Brochure
+              </button>
             </div>
           </div>
         </div>
@@ -944,7 +996,144 @@ const longitude = project.longitude;
     </div>
   </div>
 )}
+
+{showBrochure && (
+  <div
+    style={{
+      position: "fixed",
+      top: "-9999px",
+      left: "-9999px",
+      width: "800px",
+      background: "#fff",
+      padding: "30px"
+    }}
+  >
+
+    {/* TITLE */}
+    <div id="b-title">
+      <h1 style={{ textAlign: "center" }}>{project.projectName}</h1>
+      <p style={{ textAlign: "center", fontSize: "12px", color: "#666" }}>
+        {project.projectType} | {project.location}
+      </p>
     </div>
+
+    {/* DESCRIPTION */}
+    <div id="b-description">
+      <p style={{ marginTop: "20px", fontSize: "13px" }}><b>Dscription</b>{project.description}</p>
+    </div>
+
+    {/* BASIC INFO */}
+    <div id="b-info" style={{ marginTop: "20px", fontSize: "13px" }}>
+      <p><b>Type:</b> {project.projectType}</p>
+      <p><b>Location:</b> {project.location}</p>
+    </div>
+
+    {/* AMENITIES */}
+    <div id="b-amenities">
+      <h2 style={{ marginTop: "30px" }}>Amenities</h2>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        {project.amenities?.map((amenity, i) => (
+          <div
+            key={i}
+            className="b-item"
+            style={{
+              width: "32%",
+              border: "1px solid #ddd",
+              padding: "8px",
+              fontSize: "12px",
+              breakInside: "avoid"
+            }}
+          >
+            {getAmenityIcon  (amenity)} {amenity}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* GALLERY */}
+    <div id="b-gallery">
+      <h2 style={{ marginTop: "30px" }}>Gallery</h2>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        {project.images?.map((img, i) => (
+          <img
+            key={i}
+            src={img}
+            style={{ width: "150px", height: "100px" }}
+          />
+        ))}
+      </div>
+    </div>
+
+    {/* FLOOR PLANS */}
+    <div id="b-floorplans">
+  <h2 style={{ marginTop: "70px" }}>Floor Plans</h2>
+
+  {/* ✅ GROUP INTO 2 PER ROW */}
+  {Array.from({ length: Math.ceil(project.floorPlans.length / 2) }).map((_, rowIndex) => {
+    const first = project.floorPlans[rowIndex * 2];
+    const second = project.floorPlans[rowIndex * 2 + 1];
+
+    return (
+      <div
+        key={rowIndex}
+        className="floor-row"
+        style={{
+          display: "flex",
+          gap: "10px",
+          marginBottom: "15px",
+          breakInside: "avoid"
+        }}
+      >
+        {/* FIRST IMAGE */}
+        {first && (
+          <div style={{ width: "50%", textAlign: "center" }}>
+            <img
+              src={first.image}
+              style={{
+                width: "100%",
+                height: "150px",
+                objectFit: "cover",
+                borderRadius: "6px"
+              }}
+            />
+            <p style={{ fontSize: "11px" }}>
+              {first.title || `Plan ${rowIndex * 2 + 1}`}
+            </p>
+          </div>
+        )}
+
+        {/* SECOND IMAGE */}
+        {second && (
+          <div style={{ width: "50%", textAlign: "center" }}>
+            <img
+              src={second.image}
+              style={{
+                width: "100%",
+                height: "150px",
+                objectFit: "cover",
+                borderRadius: "6px"
+              }}
+            />
+            <p style={{ fontSize: "11px" }}>
+              {second.title || `Plan ${rowIndex * 2 + 2}`}
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
+
+  </div>
+)}
+
+
+
+
+</div>
+    
   );
 };
 

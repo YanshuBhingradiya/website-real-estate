@@ -800,3 +800,26 @@
     font-size: 2rem;
   }
 }
+.brochure-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #c9a14a, #f1d27a);
+  color: #222;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.brochure-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(201, 161, 74, 0.4);
+}
+
+.pdf-section {
+  margin-bottom: 30px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
