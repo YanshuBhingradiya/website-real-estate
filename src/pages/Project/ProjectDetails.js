@@ -1070,7 +1070,7 @@ const cellStyle = {
     <div id="b-floorplans">
   <h2 style={{ marginTop: "70px" }}>Floor Plans</h2>
 
-  {/* ✅ GROUP INTO 2 PER ROW */}
+  {/* GROUP INTO 2 PER ROW */}
   {Array.from({ length: Math.ceil(project.floorPlans.length / 2) }).map((_, rowIndex) => {
     const first = project.floorPlans[rowIndex * 2];
     const second = project.floorPlans[rowIndex * 2 + 1];
